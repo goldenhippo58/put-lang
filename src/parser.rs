@@ -66,6 +66,9 @@ impl Parser {
         let name_token = self.consume(TokenType::Identifier, "Expect variable name.")?;
         let var_name = name_token.lexeme.clone();
 
+        // Assume data type, modify as necessary to detect actual type
+        let data_type = DataType::Integer; // Default to Integer for example purposes
+
         let mut initializer = None;
         if self.match_token(TokenType::Assign) {
             initializer = Some(self.parse_expression()?);
@@ -76,13 +79,15 @@ impl Parser {
             "Expect ';' after variable declaration.",
         )?;
 
+        // Use the initializer in constructing the AssignmentNode if it exists
         if let Some(init) = initializer {
             Some(Box::new(AssignmentNode::new(
-                Box::new(VariableNode::new(var_name)),
+                Box::new(VariableNode::new(var_name, data_type)),
                 init,
             )))
         } else {
-            Some(Box::new(VariableNode::new(var_name)))
+            // If there's no initializer, just create a VariableNode
+            Some(Box::new(VariableNode::new(var_name, data_type)))
         }
     }
 
@@ -125,10 +130,18 @@ impl Parser {
     fn parse_primary(&mut self) -> Option<Box<dyn StatementNode>> {
         if self.match_token(TokenType::Number) {
             let token = self.previous();
-            Some(Box::new(NumberNode::new(token.lexeme.clone())))
+            // Determine if the number is an integer or float for correct data type
+            let data_type = if token.lexeme.contains('.') {
+                DataType::Float
+            } else {
+                DataType::Integer
+            };
+            Some(Box::new(NumberNode::new(token.lexeme.clone(), data_type)))
         } else if self.match_token(TokenType::Identifier) {
             let token = self.previous();
-            Some(Box::new(VariableNode::new(token.lexeme.clone())))
+            // Default to Integer, adjust based on context or additional checks
+            let data_type = DataType::Integer;
+            Some(Box::new(VariableNode::new(token.lexeme.clone(), data_type)))
         } else if self.match_token(TokenType::LeftParen) {
             let expr = self.parse_expression()?;
             self.consume(TokenType::RightParen, "Expect ')' after expression.")?;

@@ -1,8 +1,19 @@
+#![allow(dead_code)] // Suppress all dead_code warnings in this file
+
 use std::any::Any;
 use std::fmt::Debug;
 
 pub trait StatementNode: Debug {
     fn as_any(&self) -> &dyn Any;
+}
+
+#[derive(Debug)]
+pub enum DataType {
+    Integer,
+    Float,
+    String,
+    Boolean,
+    Void, // For functions with no return type or for unit type
 }
 
 #[derive(Debug)]
@@ -21,11 +32,12 @@ impl ProgramNode {
 #[derive(Debug)]
 pub struct VariableNode {
     pub name: String,
+    pub data_type: DataType,
 }
 
 impl VariableNode {
-    pub fn new(name: String) -> Self {
-        VariableNode { name }
+    pub fn new(name: String, data_type: DataType) -> Self {
+        VariableNode { name, data_type }
     }
 }
 
@@ -38,11 +50,12 @@ impl StatementNode for VariableNode {
 #[derive(Debug)]
 pub struct NumberNode {
     pub value: String,
+    pub data_type: DataType,
 }
 
 impl NumberNode {
-    pub fn new(value: String) -> Self {
-        NumberNode { value }
+    pub fn new(value: String, data_type: DataType) -> Self {
+        NumberNode { value, data_type }
     }
 }
 
@@ -122,7 +135,6 @@ impl StatementNode for ParenthesisNode {
     }
 }
 
-#[allow(dead_code)]
 #[derive(Debug)]
 pub struct IfNode {
     pub condition: Box<dyn StatementNode>,
@@ -150,7 +162,6 @@ impl StatementNode for IfNode {
     }
 }
 
-#[allow(dead_code)]
 #[derive(Debug)]
 pub struct WhileNode {
     pub condition: Box<dyn StatementNode>,
