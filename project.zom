@@ -1,0 +1,17 @@
+# Project Configuration
+
+## Project Info
+- name: PUTLang
+- version: 0.1.0
+
+## Dependencies
+- MathBasket: 1.0.0
+
+## Build Settings
+- target: release
+
+## Runtime Settings
+- max_memory: 1GB
+
+## Custom Settings
+- debug_mode: false
