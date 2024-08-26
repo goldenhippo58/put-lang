@@ -125,8 +125,28 @@ fn demo_tensor_operations() {
     println!("t1 = {}", t1);
     println!("t2 = {}", t2);
 
-    let t3 = &t1 + &t2;
-    println!("t1 + t2 = {}", t3);
+    let t_add = &t1 + &t2;
+    println!("t1 + t2 = {}", t_add);
 
-    // Add more tensor operations here as you implement them
+    let t_sub = &t1 - &t2;
+    println!("t1 - t2 = {}", t_sub);
+
+    let t_mul = &t1 * &t2;
+    println!("t1 * t2 (element-wise) = {}", t_mul);
+
+    let t_matmul = t1.matmul(&t2).unwrap();
+    println!("t1 @ t2 (matrix multiplication) = {}", t_matmul);
+
+    let t_transpose = t1.transpose();
+    println!("t1 transposed = {}", t_transpose);
+
+    let t_exp = t1.exp();
+    println!("exp(t1) = {}", t_exp);
+
+    let t_log = t1.log();
+    println!("log(t1) = {}", t_log);
+
+    println!("Mean of t1 = {}", t1.mean());
+    println!("Variance of t1 = {}", t1.variance());
+    println!("Standard deviation of t1 = {}", t1.std_dev());
 }
